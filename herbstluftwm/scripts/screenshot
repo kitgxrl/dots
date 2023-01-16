@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+if [ $1 == "full" ]; then
+    maim | xclip -selection clipboard -t image/png
+elif [ $1 == "sel" ]; then
+    maim -s | xclip -selection clipboard -t image/png
+fi

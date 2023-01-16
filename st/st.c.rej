@@ -1,0 +1,76 @@
+--- st.c
++++ st.c
+@@ -1885,30 +1883,29 @@ strhandle(void)
+ 	int j, narg, par;
+ 
+ 	term.esc &= ~(ESC_STR_END|ESC_STR);
+-	strescseq.buf[strescseq.len] = '\0';
++	strparse();
++	par = (narg = strescseq.narg) ? atoi(strescseq.args[0]) : 0;
+ 
+ 	switch (strescseq.type) {
+ 	case ']': /* OSC -- Operating System Command */
+-		strparse();
+-		par = (narg = strescseq.narg) ? atoi(STRESCARGJUST(0)) : 0;
+ 		switch (par) {
+ 		case 0:
+ 			if (narg > 1) {
+-				xsettitle(STRESCARGREST(1));
+-				xseticontitle(STRESCARGREST(1));
++				xsettitle(strescseq.args[1]);
++				xseticontitle(strescseq.args[1]);
+ 			}
+ 			return;
+ 		case 1:
+ 			if (narg > 1)
+-				xseticontitle(STRESCARGREST(1));
++				xseticontitle(strescseq.args[1]);
+ 			return;
+ 		case 2:
+ 			if (narg > 1)
+-				xsettitle(STRESCARGREST(1));
++				xsettitle(strescseq.args[1]);
+ 			return;
+ 		case 52:
+ 			if (narg > 2 && allowwindowops) {
+-				dec = base64dec(STRESCARGJUST(2));
++				dec = base64dec(strescseq.args[2]);
+ 				if (dec) {
+ 					xsetsel(dec);
+ 					xclipcopy();
+@@ -1921,7 +1918,7 @@ strhandle(void)
+ 			if (narg < 2)
+ 				break;
+ 
+-			p = STRESCARGREST(1);
++			p = strescseq.args[1];
+ 
+ 			if (!strcmp(p, "?"))
+ 				osc_color_response(defaultfg, 10);
+@@ -1934,7 +1931,7 @@ strhandle(void)
+ 			if (narg < 2)
+ 				break;
+ 
+-			p = STRESCARGREST(1);
++			p = strescseq.args[1];
+ 
+ 			if (!strcmp(p, "?"))
+ 				osc_color_response(defaultbg, 11);
+@@ -1947,7 +1944,7 @@ strhandle(void)
+ 			if (narg < 2)
+ 				break;
+ 
+-			p = STRESCARGREST(1);
++			p = strescseq.args[1];
+ 
+ 			if (!strcmp(p, "?"))
+ 				osc_color_response(defaultcs, 12);
+@@ -1982,7 +1979,7 @@ strhandle(void)
+ 		}
+ 		break;
+ 	case 'k': /* old title set compatibility */
+-		xsettitle(strescseq.buf);
++		xsettitle(strescseq.args[0]);
+ 		return;
+ 	case 'P': /* DCS -- Device Control String */
+ 	case '_': /* APC -- Application Program Command */

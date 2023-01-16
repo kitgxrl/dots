@@ -1,0 +1,5 @@
+use-grammars = { only = [ "rust", "c", "toml", "cpp", "haskell"] }
+
+[[language]]
+name = "rust"
+auto-format = true

@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+hc() { herbstclient "$@"; }
+export -f hc
+
+export TERMINAL=st
+export LAUNCHER=rundesktop
+
+hc emit_hook reload
+
+# Execute configs
+CONFIG=~/.config/herbstluftwm
+
+$CONFIG/keybinds
+$CONFIG/theme
+$CONFIG/misc
+
+# Autostart
+
+~/.fehbg
+
+hc detect_monitors
+xrdb -merge ~/.Xresources
